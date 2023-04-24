@@ -1,20 +1,98 @@
+import React, { useMemo } from 'react';
+import { HomeScreen } from './src/screens';
+import { StyleSheet, View, useColorScheme, Text } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-
+import { useFonts } from 'expo-font';
+import {
+  DarkTheme,
+  DefaultTheme,
+  NavigationContainer,
+  Theme,
+} from "@react-navigation/native";
+import * as SplashScreen from 'expo-splash-screen';
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
+import { HeaderBackgroundProvider, useHeaderBackground } from './src/contexts/HeaderBackgroundContext'
 export default function App() {
+
+  const queryClient = new QueryClient();
+
+  const [loaded] = useFonts({
+    "Dongle-Regular": require("./assets/fonts/Dongle-Regular.ttf"),
+    "Dongle-Bold": require("./assets/fonts/Dongle-Bold.ttf"),
+    "Dongle-Light": require("./assets/fonts/Dongle-Light.ttf"),
+    "Oswald-Regular": require("./assets/fonts/Oswald-Regular.ttf"),
+    "Oswald-Light": require("./assets/fonts/Oswald-Light.ttf"),
+    "Oswald-ExtraLight": require("./assets/fonts/Oswald-ExtraLight.ttf"),
+    "Oswald-Bold": require("./assets/fonts/Oswald-Bold.ttf"),
+  });
+
+
+  const colorScheme = useColorScheme();
+  // domantion of the theme
+  const theme: Theme = useMemo(
+    () =>
+      colorScheme === "dark"
+        ?
+        {
+          ...DefaultTheme,
+          colors: {
+            ...DefaultTheme.colors,
+            background: "#f5f5f5",
+            text: "#191919",
+            border: "#D9D9D9",
+            primary: "#191919",
+          },
+        }
+        :
+        {
+          ...DarkTheme,
+          colors: {
+            ...DarkTheme.colors,
+            primary: "#fff",
+            text: "#fff",
+          },
+        },
+    [colorScheme]
+  );
+
+  React.useEffect(() => {
+    async function prepare() {
+      try {
+        await SplashScreen.preventAutoHideAsync();
+      } catch (e) {
+        console.warn(e);
+      }
+    }
+    prepare();
+  }, []);
+
+  if (!loaded) {
+    return undefined;
+  } else {
+    SplashScreen.hideAsync();
+  }
+
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <QueryClientProvider client={queryClient}>
+      <NavigationContainer theme={theme}>
+        <StatusBar style="light" />
+        <View style={styles.container}>
+          <HeaderBackgroundProvider>
+            <HomeScreen />
+          </HeaderBackgroundProvider>
+        </View>
+      </NavigationContainer>
+    </QueryClientProvider>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+    backgroundColor: '#000000',
+    fontFamily: 'Dongle-Regular',
+    fontSize: 18,
+    color: '#000',
+  }
+})
