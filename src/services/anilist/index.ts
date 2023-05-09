@@ -13,7 +13,7 @@ import {
 // import { removeArrayOfObjectDup } from "@/utils";
 // import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import axios from "axios";
-// import { getTranslations } from "../tmdb";
+import supabaseClient from "../../lib/supabase";
 import {
   airingSchedulesQuery,
   charactersDefaultFields,
@@ -46,36 +46,36 @@ export const anilistFetcher = async <T>(query: string, variables: any) => {
   return data?.data;
 };
 
-// export const getPageMedia = async (
-//   args: MediaArgs & PageArgs,
-//   fields?: string
-// ) => {
-//   const response = await anilistFetcher<PageQueryResponse>(
-//     mediaQuery(fields),
-//     args
-//   );
+export const getPageMedia = async (
+  args: MediaArgs & PageArgs,
+  fields?: string
+) => {
+  const response = await anilistFetcher<PageQueryResponse>(
+    mediaQuery(fields),
+    args
+  );
 
-//   const mediaIdList = response?.Page?.media?.map((media) => media.id);
+  const mediaIdList = response?.Page?.media?.map((media) => media.id);
 
-//   const { data: mediaTranslations, error } = await supabaseClient
-//     .from<Translation>("kaguya_translations")
-//     .select("*")
-//     .in("mediaId", mediaIdList);
+  // const { data: mediaTranslations, error } = await supabaseClient
+  //   .from<Translation>("kaguya_translations")
+  //   .select("*")
+  //   .in("mediaId", mediaIdList);
 
-//   if (error || !mediaTranslations?.length) return response?.Page;
+  // if (error || !mediaTranslations?.length) return response?.Page;
 
-//   response?.Page?.media?.forEach((media) => {
-//     const translations = mediaTranslations.filter(
-//       (translation) => translation.mediaId === media.id
-//     );
+  // response?.Page?.media?.forEach((media) => {
+  //   const translations = mediaTranslations.filter(
+  //     (translation) => translation.mediaId === media.id
+  //   );
 
-//     if (!translations?.length) return;
+  //   if (!translations?.length) return;
 
-//     media.translations = translations;
-//   });
+  //   media.translations = translations;
+  // });
 
-//   return  ?.Page;
-// };
+  return response?.Page;
+};
 
 // export const getMedia = async (args: MediaArgs & PageArgs, fields?: string) => {
 //   const response = await anilistFetcher<PageQueryResponse>(
@@ -103,10 +103,48 @@ export const getMedia = async (args: MediaArgs & PageArgs, fields?: string) => {
 
   const mediaIdList = mediaList.map((media) => media.id);
 
-  // const { data: mediaTranslations, error } = await supabaseClient
-  //   .from<Translation>("kaguya_translations")
-  //   .select("*")
-  //   .in("mediaId", mediaIdList);
+
+  console.log('sdad', mediaIdList);
+
+
+
+  const { data: chapterCounter, error } = await supabaseClient
+    .from("chapter_counter")
+    .select("*")
+    .in("mediaId", mediaIdList);
+
+  // return mediaList;
+  if (error || !chapterCounter?.length) return mediaList;
+
+  return mediaList.map((media) => {
+    const counter = chapterCounter.filter(
+      (count) => count.mediaId === media.id
+    );
+
+    return {
+      ...media,
+      counter,
+    };
+
+  });
+}
+
+export const getMediaRecenly = async (args: MediaArgs & PageArgs, fields?: string) => {
+  const response = await anilistFetcher<PageQueryResponse>(
+    mediaQuery(fields),
+    args
+  );
+
+  const mediaList = response?.Page?.media || [];
+
+  const mediaIdList = mediaList.map((media) => media.id);
+
+  console.log('sdad', mediaIdList);
+
+  const { data: mediaData, error } = await supabaseClient
+    .from("kaguya_translations")
+    .select("*")
+
 
   return mediaList;
   // if (error || !mediaTranslations?.length) return mediaList;
@@ -121,7 +159,9 @@ export const getMedia = async (args: MediaArgs & PageArgs, fields?: string) => {
   //     translations,
   //   };
 
-};
+
+}
+
 
 
   // const { data: mediaTranslations, error } = await supabaseClient

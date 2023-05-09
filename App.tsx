@@ -25,6 +25,12 @@ export default function App() {
     "Oswald-ExtraLight": require("./assets/fonts/Oswald-ExtraLight.ttf"),
     "Oswald-Bold": require("./assets/fonts/Oswald-Bold.ttf"),
   });
+  const fonts = {
+    fontNormal: 'Oswald-Regular',
+    fontBold: 'Oswald-Bold',
+    fontLight: 'Oswald-Light',
+    fontExtraLight: 'Oswald-ExtraLight',
+  }
 
 
   const colorScheme = useColorScheme();
@@ -42,15 +48,21 @@ export default function App() {
             border: "#D9D9D9",
             primary: "#191919",
           },
+          fonts: {
+            ...fonts
+          }
         }
         :
         {
           ...DarkTheme,
           colors: {
             ...DarkTheme.colors,
-            primary: "#fff",
+            primary: "#ff6ebe",
             text: "#fff",
           },
+          fonts: {
+            ...fonts
+          }
         },
     [colorScheme]
   );
@@ -91,8 +103,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000000',
-    fontFamily: 'Dongle-Regular',
-    fontSize: 18,
-    color: '#000',
   }
 })

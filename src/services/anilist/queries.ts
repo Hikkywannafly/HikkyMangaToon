@@ -798,3 +798,13 @@ query Studio(
   }
 }
 `;
+
+// queries media with the mediaId property
+export const mediaWithIdQuery = (fields = mediaDefaultFields) => `
+query Media($mediaId: Int) {
+  Media(id: $mediaId) {
+    ${fields}
+  }
+}
+`;
+

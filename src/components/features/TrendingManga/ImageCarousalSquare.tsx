@@ -1,11 +1,8 @@
-import { StyleSheet, View, Image, useWindowDimensions, Text, ImageBackground, Button, TouchableHighlight, } from 'react-native';
-
-import React, { useState, useEffect, useRef, useContext } from 'react';
-import { useTheme } from "@react-navigation/native";
+import { StyleSheet, View, Image, useWindowDimensions, Text, ImageBackground } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { useTheme, useNavigation } from "@react-navigation/native";
 import { LinearGradient } from 'expo-linear-gradient';
-import { useHeaderBackground } from '../../../contexts/HeaderBackgroundContext'
-import Icons from "@expo/vector-icons/MaterialIcons";
-
+import { AccountBar, NotificationBar } from '../../index'
 
 import Animated, {
     useSharedValue,
@@ -13,23 +10,20 @@ import Animated, {
     useAnimatedStyle,
     interpolate,
     useAnimatedRef,
-    color,
 } from 'react-native-reanimated';
-
-
 type Props = {
     data: any[];
     autoPlay?: boolean;
     pagination?: boolean;
 
 }
-
 const ImageCarousalSquare: React.FC<Props> = ({
     data,
     autoPlay = true,
-    pagination,
 }) => {
-    const { backgroundColor, setBackgroundColor } = useHeaderBackground()
+    // @ts-ignore
+    const { colors, fonts } = useTheme();
+    const nativation = useNavigation();
     const [newData] = useState([
         { key: 'spacer-left' },
         ...data,
@@ -48,9 +42,6 @@ const ImageCarousalSquare: React.FC<Props> = ({
             x.value = event.contentOffset.x;
         },
     });
-    console.log(`data`, JSON.stringify(data));
-
-
     useEffect(() => {
         if (isAutoPlay === true) {
             let _offSet = offSet.value;
@@ -72,14 +63,16 @@ const ImageCarousalSquare: React.FC<Props> = ({
 
     return (
         <View>
-
+            <View style={styles.header}>
+                <AccountBar />
+                <NotificationBar />
+            </View>
 
             <Animated.ScrollView
                 ref={scrollViewRef}
                 onScroll={onScroll}
                 onScrollBeginDrag={() => {
                     setIsAutoPlay(false);
-
                 }}
                 onMomentumScrollEnd={e => {
                     offSet.value = e.nativeEvent.contentOffset.x;
@@ -92,6 +85,8 @@ const ImageCarousalSquare: React.FC<Props> = ({
                 bounces={false}
                 showsHorizontalScrollIndicator={false}
             >
+
+
                 {newData.map((item, index) => {
                     const style = useAnimatedStyle(() => {
                         const scale = interpolate(
@@ -108,14 +103,15 @@ const ImageCarousalSquare: React.FC<Props> = ({
                         return <View style={{ width: SPACER }} key={index} />;
                     }
                     return (
-                        <View style={{ width: SIZE, marginTop: 10 }} key={index}>
-                            <Animated.View style={[styles.imageContainer, style]}
+                        <View style={{ width: SIZE, }} key={index}>
+                            <Animated.View style={[styles.imageContainer, style, { height: 320 }]}
                             >
                                 <ImageBackground source={{
                                     uri: item?.bannerImage ?? item?.coverImage?.large
                                 }}
                                     blurRadius={7}
                                     resizeMode="cover"
+                                    imageStyle={{ width: '100%', height: 320 }}
                                     style={styles.image}>
                                     <LinearGradient
                                         colors={[
@@ -135,13 +131,13 @@ const ImageCarousalSquare: React.FC<Props> = ({
                                         ]}
                                         start={{ x: 0, y: 1.5 }}
                                         end={{ x: 1.5, y: 0 }}
-                                        style={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0 }}
+                                        style={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, height: 320 }}
                                     >
                                     </LinearGradient>
 
                                     <View style={styles.magaContainer}>
                                         <View style={styles.infoManga}>
-                                            <Text numberOfLines={1} ellipsizeMode="tail" style={styles.mangaTitle}>{item.title.userPreferred}</Text>
+                                            <Text numberOfLines={1} ellipsizeMode="tail" style={[styles.mangaTitle, { color: item.coverImage.color ?? '#ffffff' }]}>{item.title.userPreferred}</Text>
                                             <Text style={styles.genres} numberOfLines={1} ellipsizeMode="tail" >{
                                                 item.genres.map((genre: any, index: any) => {
                                                     return `${genre} ${index < item.genres.length - 1 ? '• ' : ''}`
@@ -155,22 +151,33 @@ const ImageCarousalSquare: React.FC<Props> = ({
                                                 alignItems: 'center',
                                                 gap: 10,
                                             }}>
-                                                <Text style={{
+                                                {/* <Text style={{
                                                     color: '#FFFFFF'
                                                 }}>🌟 {item.averageScore}</Text>
                                                 <Text style={{
                                                     color: '#FFFFFF'
-                                                }}>💕 {item.trending}</Text>
+                                                }}>💕 {item.trending}</Text> */}
 
                                             </View>
+                                            <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                                                <Text style={{ color: '#b0c1ff', fontSize: 18, fontFamily: fonts.fontLight, marginTop: 5, alignItems: 'center' }}>
+                                                    {
 
-                                            <Text style={{
+                                                        Math.max(...item.counter.map((item: any) => item.quantity)) > 0 ? Math.max(...item.counter.map((item: any) => item.quantity)) : '??'
+
+                                                    }
+
+                                                </Text>
+                                                <Text style={{ color: '#d4d4d4', fontSize: 18, fontFamily: fonts.fontLight, alignItems: 'center' }}>  |  </Text>
+                                                <Text style={{ color: '#d4d4d4', fontSize: 16, fontFamily: fonts.fontLight, alignItems: 'center' }}>Chapters </Text>
+                                            </View>
+
+                                            {/* <Text style={{
                                                 marginTop: 5,
                                                 color: '#e06ead',
-                                                fontSize: 18,
-                                                fontFamily: 'Oswald-Bold'
-
-                                            }}>{item.status}</Text>
+                                                fontSize: 17,
+                                                fontFamily: 'Oswald-Regular'
+                                            }}>{item.status} </Text> */}
 
 
                                         </View>
@@ -178,9 +185,12 @@ const ImageCarousalSquare: React.FC<Props> = ({
                                             justifyContent: 'center',
                                             alignItems: 'center',
                                         }}>
-                                            <Image style={styles.mangaCover} source={{ uri: item.coverImage.large }} />
-
-
+                                            <View>
+                                                <Image style={styles.mangaCover} source={{ uri: item.coverImage.large }} />
+                                                <View style={{ position: 'absolute', bottom: 0, right: 0, backgroundColor: 'rgba(249, 105, 180, 0.8)', borderTopLeftRadius: 20, borderTopRightRadius: 1, borderBottomRightRadius: 7, paddingLeft: 4, paddingBottom: 2, paddingTop: 0.5 }}>
+                                                    <Text style={{ color: '#fff', fontSize: 12, fontFamily: fonts.fontBold, justifyContent: 'center' }}>  {item.averageScore / 10} ⭐ </Text>
+                                                </View>
+                                            </View>
 
                                         </View>
                                     </View>
@@ -216,6 +226,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     magaContainer: {
+        marginTop: 100,
         position: 'absolute',
         padding: 10,
         flexDirection: 'row',
@@ -232,15 +243,16 @@ const styles = StyleSheet.create({
         fontSize: 24,
     },
     mangaDescription: {
-        fontFamily: "Oswald-Light",
+        fontFamily: "Oswald-Regular",
         color: '#FFFFFF',
         fontSize: 16,
         marginBottom: 10,
         fontWeight: 'normal',
+        height: 60,
     },
     genres: {
         fontFamily: "Oswald-Regular",
-        color: '#FFFFFF',
+        color: '#8c8484',
         fontSize: 16,
         marginBottom: 4,
         fontWeight: 'normal',
@@ -252,7 +264,6 @@ const styles = StyleSheet.create({
         fontSize: 20,
     },
     mangaCover: {
-        // marginTop: 20,
         height: 150,
         width: 100,
         margin: 'auto',
@@ -267,7 +278,15 @@ const styles = StyleSheet.create({
         width: 100,
     },
 
-
+    header: {
+        justifyContent: "space-between",
+        flexDirection: "row",
+        zIndex: 100,
+        marginTop: 40,
+        marginHorizontal: 16,
+        position: 'absolute',
+        // paddingBottom: 1,
+    },
 
 });
 export default ImageCarousalSquare;

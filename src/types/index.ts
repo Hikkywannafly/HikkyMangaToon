@@ -21,32 +21,32 @@ export interface MediaTitle extends Partial<ALMediaTitle> {
 
 export type MediaDescription = Record<string, string>;
 
-// export type SourceConnection = {
-//   id: string;
-//   sourceId: string;
-//   sourceMediaId: string;
-//   mediaId: number;
-//   source: Source;
-//   created_at?: string;
-//   updated_at?: string;
-// };
+export type SourceConnection = {
+  id: string;
+  sourceId: string;
+  sourceMediaId: string;
+  mediaId: number;
+  source: Source;
+  created_at?: string;
+  updated_at?: string;
+};
 
 // export interface AnimeSourceConnection extends SourceConnection {
 //   episodes: Episode[];
 // }
 
-// export interface MangaSourceConnection extends SourceConnection {
-//   chapters: Chapter[];
-// }
+export interface MangaSourceConnection extends SourceConnection {
+  chapters: Chapter[];
+}
 
-// export type Source = {
-//   id: string;
-//   name: string;
-//   locales: string[];
-//   addedUserId?: string;
-//   addedUser?: AdditionalUser;
-//   isCustomSource: boolean;
-// };
+export type Source = {
+  id: string;
+  name: string;
+  locales: string[];
+  addedUserId?: string;
+  // addedUser?: AdditionalUser;
+  isCustomSource: boolean;
+};
 
 // export type Video = {
 //   fonts: Attachment[];
@@ -79,20 +79,20 @@ export type Hosting = {
 //   title?: string;
 // };
 
-// export type Chapter = {
-//   name: string;
-//   sourceConnectionId?: string;
-//   sourceConnection?: MangaSourceConnection;
-//   sourceId: string;
-//   sourceChapterId: string;
-//   sourceMediaId: string;
-//   source: Source;
-//   slug: string;
-//   images: {
-//     images: Attachment[];
-//   }[];
-//   published: boolean;
-// };
+export type Chapter = {
+  name: string;
+  sourceConnectionId?: string;
+  sourceConnection?: MangaSourceConnection;
+  sourceId: string;
+  sourceChapterId: string;
+  sourceMediaId: string;
+  source: Source;
+  slug: string;
+  // images: {
+  //   images: Attachment[];
+  // }[];
+  published: boolean;
+};
 
 // export interface Section<T> {
 //   title: string;

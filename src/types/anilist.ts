@@ -368,6 +368,8 @@ export interface MediaTitle extends Record<string, string> {
 export enum MediaType {
   Anime = "ANIME",
   Manga = "MANGA",
+  Novel = "NOVEL",
+  
 }
 /** The format the media was released in */
 export enum MediaFormat {

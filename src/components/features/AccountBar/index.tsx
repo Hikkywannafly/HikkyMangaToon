@@ -7,7 +7,8 @@ type Props = {}
 const AVATAR_URL = "https://images.spiderum.com/sp-images/6ddf04b0735811eaac4fa9605f4c6d25.png";
 
 const AccountBar = (props: Props) => {
-    const { colors } = useTheme();
+    // @ts-ignore
+    const { colors, fonts } = useTheme();
 
     return (
         <View
@@ -29,7 +30,7 @@ const AccountBar = (props: Props) => {
 
                     style={{
                         color: colors.text, opacity: 0.75,
-                        fontFamily: "Oswald-Light",
+                        fontFamily: fonts.fontLight,
 
                     }}
                     numberOfLines={1}
@@ -38,7 +39,7 @@ const AccountBar = (props: Props) => {
                 </Text>
                 <Text
                     style={{
-                        fontFamily: "Oswald-Regular",
+                        fontFamily: fonts.fontNormal,
                         fontSize: 16,
                         marginBottom: 8,
                         color: colors.text,

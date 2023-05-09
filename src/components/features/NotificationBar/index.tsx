@@ -23,15 +23,7 @@ const NotificationBar = (props: Props) => {
 
                 }}
                 name="search" size={24} color={colors.text} />
-            <Icons
-                style={{
-                    width: 30,
-                    aspectRatio: 1,
-                    alignItems: "center",
-                    justifyContent: "center",
 
-                }}
-                name="notifications" size={24} color={colors.text} />
 
         </View>
     )
