@@ -103,11 +103,6 @@ export const getMedia = async (args: MediaArgs & PageArgs, fields?: string) => {
 
   const mediaIdList = mediaList.map((media) => media.id);
 
-
-  console.log('sdad', mediaIdList);
-
-
-
   const { data: chapterCounter, error } = await supabaseClient
     .from("chapter_counter")
     .select("*")
@@ -164,50 +159,48 @@ export const getMediaRecenly = async (args: MediaArgs & PageArgs, fields?: strin
 
 
 
-  // const { data: mediaTranslations, error } = await supabaseClient
-  //   .from<Translation>("kaguya_translations")
-  //   .select("*")
-  //   .in("mediaId", mediaIdList);
+// const { data: mediaTranslations, error } = await supabaseClient
+//   .from<Translation>("kaguya_translations")
+//   .select("*")
+//   .in("mediaId", mediaIdList);
 
-  // if (error || !mediaTranslations?.length) return mediaList;
+// if (error || !mediaTranslations?.length) return mediaList;
 
-  // return mediaList.map((media) => {
-  //   const translations = mediaTranslations.filter(
-  //     (trans) => trans.mediaId === media.id
-  //   );
-// };
-
-// export const getMediaDetails = async (
-//   args: MediaArgs & PageArgs,
-//   fields?: string
-// ) => {
-//   const response = await anilistFetcher<MediaDetailsQueryResponse>(
-//     mediaDetailsQuery(fields),
-//     args
+// return mediaList.map((media) => {
+//   const translations = mediaTranslations.filter(
+//     (trans) => trans.mediaId === media.id
 //   );
-
-//   let translations: Translation[] = [];
-//   const media = response?.Media;
-
-//   const { data } = await supabaseClient
-//     .from<Translation>("kaguya_translations")
-//     .select("*")
-//     .eq("mediaId", media.id)
-//     .eq("mediaType", args?.type || MediaType.Anime);
-
-//   if (data?.length) {
-//     translations = data;
-//   } else if (args?.type === MediaType.Manga) {
-//     translations = null;
-//   } else {
-//     translations = await getTranslations(media);
-//   }
-
-//   return {
-//     ...media,
-//     translations,
-//   };
 // };
+
+export const getMediaDetails = async (
+  args: MediaArgs & PageArgs, fields?: string
+) => {
+  const response = await anilistFetcher<MediaDetailsQueryResponse>(
+    mediaDetailsQuery(fields),
+    args
+  );
+
+  // let translations: Translation[] = [];
+  const media = response?.Media;
+
+  // const { data } = await supabaseClient
+  //   .from("kaguya_translations")
+  //   .select("*")
+  //   .eq("mediaId", media.id)
+  //   .eq("mediaType", args?.type || MediaType.Anime);
+
+  // if (data?.length) {
+  //   translations = data;
+  // } else if (args?.type === MediaType.Manga) {
+  //   translations = null;
+  // } else {
+  //   translations = await getTranslations(media);
+  // }
+  return {
+    ...media,
+  };
+
+};
 
 // export const getAiringSchedules = async (
 //   args: AiringScheduleArgs & PageArgs,

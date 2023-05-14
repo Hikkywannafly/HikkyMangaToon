@@ -45,7 +45,7 @@ const CardManga: React.FC<Props> = (
                 {/* chapter */}
                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <Text style={{ color: '#0048ff', fontSize: 20, fontFamily: fonts.fontBold, justifyContent: 'center' }}>  ~ </Text>
+                        <Text style={{ color: '#b0c1ff', fontSize: 20, fontFamily: fonts.fontBold, justifyContent: 'center' }}>  ~ </Text>
                         <Text style={{ color: 'grey', fontSize: 16, fontFamily: fonts.fontBold, justifyContent: 'center' }}> | </Text>
                         <Text style={{ color: 'grey', fontSize: 16, fontFamily: fonts.fontLight, justifyContent: 'center' }}>  {data.chapter === null ? '~' : data.chapter} </Text>
                     </View>

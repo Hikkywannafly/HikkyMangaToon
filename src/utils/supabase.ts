@@ -68,3 +68,61 @@
 //         }
 //     );
 // };
+
+
+import {
+    PostgrestError,
+    PostgrestFilterBuilder,
+    PostgrestSingleResponse,
+} from "@supabase/postgrest-js";
+import {
+    QueryKey,
+    useInfiniteQuery,
+    UseInfiniteQueryOptions,
+    useQuery,
+    UseQueryOptions,
+} from "@tanstack/react-query";
+// import { getPagination } from ".";
+
+// @ts-ignore
+export type SupabaseQueryFunction<T> = () => PostgrestFilterBuilder<T>;
+
+export type SupabaseInfiniteQueriesFunction<T> = (
+    from: number,
+    to: number
+    // @ts-ignore
+) => PostgrestFilterBuilder<T>;
+
+export type SupabaseSingleQueryFunction<T> = () => PromiseLike<
+    PostgrestSingleResponse<T>
+>;
+
+export type SupabaseQueryOptions<T> = Omit<
+    UseQueryOptions<T[], PostgrestError, T[], QueryKey>,
+    "queryKey" | "queryFn"
+>;
+
+export type SupabaseSingleQueryOptions<T> = Omit<
+    UseQueryOptions<T, PostgrestError, T, QueryKey>,
+    "queryKey" | "queryFn"
+>;
+
+export const useSupabaseQuery = <T>(
+    key: QueryKey,
+    queryFn: SupabaseQueryFunction<T>,
+    options?: SupabaseQueryOptions<T>
+) => {
+    return useQuery<T[], PostgrestError>(
+        key,
+        async () => {
+            const { data, error } = await queryFn();
+
+            if (error) {
+                throw error;
+            }
+
+            return data;
+        },
+        options
+    );
+};

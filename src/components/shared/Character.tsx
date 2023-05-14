@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, useWindowDimensions } from 'react-native'
 import React, { useState, useEffect, useRef, } from 'react';
 import { useTheme } from '@react-navigation/native'
-import CardManga from '../../shared/Card'
+import CardCharacter from './CardCharacter'
 import Animated, {
     useSharedValue,
     useAnimatedScrollHandler,
@@ -16,7 +16,7 @@ type Props = {
     autoPlay?: boolean;
     pagination?: boolean;
 }
-const UpCommingManga: React.FC<Props> = (
+const Character: React.FC<Props> = (
     {
         data,
     }
@@ -42,15 +42,11 @@ const UpCommingManga: React.FC<Props> = (
     });
     return (
         <View style={styles.containter}>
-            <View style={styles.title}>
-                <Text style={[{ color: colors.text, fontFamily: fonts.fontRegular, fontWeight: '600', fontSize: 18 }]}>Trending Novel </Text>
-
-            </View>
-
             <View style={styles.content}>
                 <Animated.ScrollView
                     ref={scrollViewRef}
                     // onScroll={onScroll}
+                    style={{ width: `110%` }}
                     onScroll={Animated.event(
                         [{ nativeEvent: { contentOffset: { y: scrollY } } }],
                         { useNativeDriver: true }
@@ -87,22 +83,20 @@ const UpCommingManga: React.FC<Props> = (
                         return (
                             <Animated.View
                                 style={[
-
                                     {
                                         width: SIZE / 2.5,
                                         marginRight: 8,
-
                                     },
                                     style,
 
                                 ]}
                                 key={index} >
-                                <CardManga
+                                <CardCharacter
                                     data={{
-                                        title: item.title.userPreferred,
-                                        image: item.coverImage.large,
-                                        avageScore: item.averageScore,
-                                        chapter: item.chapters,
+                                        image: item.node.image.large,
+                                        role: item.role,
+                                        name: item.node.name.full,
+
                                     }}
                                 />
                             </Animated.View>
@@ -120,6 +114,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "column",
         gap: 10,
+        width: '100%',
     },
     title: {
         flex: 1,
@@ -135,4 +130,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default UpCommingManga
+export default Character

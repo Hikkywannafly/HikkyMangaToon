@@ -11,7 +11,9 @@ import {
 } from "@react-navigation/native";
 import * as SplashScreen from 'expo-splash-screen';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
-import { HeaderBackgroundProvider, useHeaderBackground } from './src/contexts/HeaderBackgroundContext'
+import { HeaderBackgroundProvider, useHeaderBackground } from './src/contexts/HeaderBackgroundContext';
+import StackNavigator from "./StackNavigator";
+import { ImageCarousalSquare } from './src/components';
 export default function App() {
 
   const queryClient = new QueryClient();
@@ -90,12 +92,12 @@ export default function App() {
       <NavigationContainer theme={theme}>
         <StatusBar style="light" />
         <View style={styles.container}>
-          <HeaderBackgroundProvider>
-            <HomeScreen />
-          </HeaderBackgroundProvider>
+          <StackNavigator />
         </View>
       </NavigationContainer>
-    </QueryClientProvider>
+    </QueryClientProvider >
+
+
   );
 }
 
